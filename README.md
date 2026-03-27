@@ -1,2 +1,55 @@
 # HomeServerAdventures
-Home Server Adventures
+
+This repo contains notes on how I (try to) set up my home server. Target audience: future me, and whomever interested in a similar setup.
+
+## Hardware
+
+| Component | Product
+| - | -
+| CPU | [Intel Core Ultra 7 processor 270K Plus](https://www.intel.com/content/www/us/en/products/sku/245692/intel-core-ultra-7-processor-270k-plus-36m-cache-up-to-5-50-ghz/specifications.html)
+| CPU cooler | [Be quiet Pure Rock 3 PRO](https://www.bequiet.com/en/cpucooler/5599)
+| Motherboard | [Asus Prime Z890-P Wifi](https://www.asus.com/us/motherboards-components/motherboards/prime/prime-z890-p-wifi/helpdesk_bios?model2Name=PRIME-Z890-P-WIFI) - link to [manual](https://dlcdnta.asus.com/pub/ASUS/mb/LGA1851/PRIME%20Z890-P%20WIFI/E24237_PRIME_Z890-P_WIFI_EM_WEB.pdf?model=PRIME%20Z890-P%20WIFI&Signature=4H5tSZgiXWc5Grpqj3lNhP4j0aJqObPNqB3B2W4mhg9-rOX19FCWFjkd1SCvugfExreEehUHnAvHvUccTuv2TPdazfADk6muArz4BRc0koim0W8pARYUgHdxPj3XFiOWkmN~sLkTkaBRFmjqZrinB7J1M~dpFh4HLGqlSNJkHuG3HXWbnoRLS0lDUMnQtXTndtJtcgTlgxb3fq~eAhO9-Thm2m3hjlF8~E0836wN3PDbbOcmbRInpujop0aPHn-x3BUEClcPUHTffLw81SBNwehaKwk3h7KZrJ8FdSR0WtdwMwc2aFP~CP02oSA8xCAEv7NtAmv8jC699GBMJ5~eCQ__&Expires=1774638465&Key-Pair-Id=K2ITB7O97XKKCX)
+| RAM | [Kingston Fury Beast KF556C40BBK2-32 (2x16GB DDR5 5600mt/s CL40)](https://www.kingston.com/datasheets/KF556C40BBK2-32.pdf)
+| SSD | [WD_Black SN7100 NVMe - 1TB](https://support-en.sandisk.com/app/products/product-detailweb/p/9371)
+| HDD | 4 x [Seagate Enterprise Capacity 3.5 HDD SAS 4Kn Secure, 8TB (p/n ST8000NM0095)](https://www.seagate.com/www-content/datasheets/pdfs/exos-7-e8-data-sheet-DS1957-1-1709US-en_US.pdf)
+| Case | [Fractal R5 Define](https://www.fractal-design.com/products/cases/define/define-r5/)
+| PSU | [Be Quiet Pure Power 13 M 850W](https://www.bequiet.com/en/powersupply/5952)
+
+Links point to product support page if available.
+
+### Future HW upgrades
+
+- GPU (Intel Arc Pro B50?) for 3D rendering (Fusion 360) and possibly some LLM foolery.
+- RAM (max. 256GB), once prices drop... 4800 MT/s CL40 will be enough (1R, 2DPC) when using all 4 slots. 4400 MT/s when using 2R (dual rank). More info [here](https://edc.intel.com/content/www/us/en/design/products/platforms/details/arrow-lake-s/core-ultra-200s-series-processors-datasheet-volume-1-of-2/processor-sku-support-matrix/).
+
+## Goals
+
+A server capable of serving multiple Linux / Windows VMs. The VMs will either be simple, single responsibility VMs (e.g., NAS, Home Assistant), or workspaces (e.g., Win11 with Fusion 360, Debian with KiCAD, etc.). This will help me keep uncluttered workspaces with minimalistic version control (snapshots).
+
+## TODO
+
+- Update BIOS
+- Install Win11 ([download](https://www.microsoft.com/en-us/software-download/windows11))
+- Update firmware
+- Update drivers
+- Measure core, bare metal PC performance (mem/cpu/ssd/hdd performance tests). To validate the components perform as expected, and then to be used as a baseline to validate VM performance.
+- Measure temperatures: is cooling capacity enough to keep the server running at 100% continously (at normal room temperature)
+
+At a later stage, measure power usage.
+
+## README per subject
+
+- [Proxmox](Proxmox.md)
+- [TrueNAS](TrueNAS.md)
+
+## Useful tools
+
+### Windows
+
+- https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer
+- https://sddashboarddownloads.sandisk.com/wdDashboard/DashboardSetup.exe
+
+
+### OS-independent
+
+- https://www.seagate.com/support/downloads/seatools/
