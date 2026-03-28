@@ -24,21 +24,39 @@ Links point to product support page if available.
 
 ## Goals
 
-A server capable of serving multiple Linux / Windows VMs. The VMs will either be simple, single responsibility VMs (e.g., NAS, Home Assistant), or workspaces (e.g., Win11 with Fusion 360, Debian with KiCAD, etc.). This will help me keep uncluttered workspaces with minimalistic version control (snapshots).
+A server capable of serving multiple Linux / Windows VMs. The VMs will either be simple, single responsibility VMs, for instance:
+
+- NAS
+- Home Assistant
+- InvenTree
+- PostgreSQL
+- Print server
+
+Or workspaces, e.g.:
+
+- Win11 with Fusion 360
+- Debian with KiCAD
+- Generic VScode dev environment
+- Embedded development (IAI, etc.)
+- Web development stack (LEMP + IDE's)
+
+This will help me keep uncluttered workspaces with minimalistic version control (snapshots).
 
 ## TODO
 
 - Update BIOS
-- Install Win11 ([download](https://www.microsoft.com/en-us/software-download/windows11))
+- Install debloated [Windows 11](Windows.md)
 - Update firmware
 - Update drivers
 - Measure core, bare metal PC performance (mem/cpu/ssd/hdd performance tests). To validate the components perform as expected, and then to be used as a baseline to validate VM performance.
-- Measure temperatures: is cooling capacity enough to keep the server running at 100% continously (at normal room temperature)
+- Measure temperature: is cooling capacity enough to keep the server running at 100% continuously (at normal room temperature)
+- Repeat using Debian server.
 
 At a later stage, measure power usage.
 
 ## README per subject
 
+- [Windows 11](Windows.md)
 - [Proxmox](Proxmox.md)
 - [TrueNAS](TrueNAS.md)
 
