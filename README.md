@@ -19,8 +19,10 @@ Links point to product support page if available.
 
 ### Future HW upgrades
 
-- GPU (Intel Arc Pro B50?) for 3D rendering (Fusion 360) and possibly some LLM foolery.
-- RAM (max. 256GB), once prices drop... 4800 MT/s CL40 will be enough (1R, 2DPC) when using all 4 slots. 4400 MT/s when using 2R (dual rank). More info [here](https://edc.intel.com/content/www/us/en/design/products/platforms/details/arrow-lake-s/core-ultra-200s-series-processors-datasheet-volume-1-of-2/processor-sku-support-matrix/).
+- GPU (Intel Arc Pro B50?) for 3D workloads (Fusion 360) and possibly some LLM foolery.
+- RAM (max. 256GB), once prices drop... 
+  - 4800 MT/s CL40 will be enough (1R, 2DPC) when using all 4 slots. 4400 MT/s when using 2R (dual rank). More info [here](https://edc.intel.com/content/www/us/en/design/products/platforms/details/arrow-lake-s/core-ultra-200s-series-processors-datasheet-volume-1-of-2/processor-sku-support-matrix/). 
+  - Check memory compatibility on the [Asus support site](https://www.asus.com/us/motherboards-components/motherboards/prime/prime-z890-p-wifi/helpdesk_qvl_memory?model2Name=PRIME-Z890-P-WIFI) (tab CPU/Memory Support).
 
 ## Goals
 
@@ -56,6 +58,7 @@ At a later stage, measure power usage.
 
 ## README per subject
 
+- [Motherboard](Motherboard.md)
 - [Windows 11](Windows.md)
 - [Proxmox](Proxmox.md)
 - [TrueNAS](TrueNAS.md)
@@ -71,3 +74,4 @@ At a later stage, measure power usage.
 ### OS-independent
 
 - https://www.seagate.com/support/downloads/seatools/
+- https://www.memtest86.com/
