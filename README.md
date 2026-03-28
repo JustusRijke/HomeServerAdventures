@@ -1,4 +1,4 @@
-# HomeServerAdventures
+# Home Server Adventures
 
 This repo contains notes on how I (try to) set up my home server. Target audience: future me, and whomever interested in a similar setup.
 
