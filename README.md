@@ -21,7 +21,8 @@ Links point to product support page if available.
 
 - GPU (Intel Arc Pro B50?) for 3D workloads (Fusion 360) and possibly some LLM foolery.
 - RAM (max. 256GB), once prices drop... 
-  - 4800 MT/s CL40 will be enough (1R, 2DPC) when using all 4 slots. 4400 MT/s when using 2R (dual rank). More info [here](https://edc.intel.com/content/www/us/en/design/products/platforms/details/arrow-lake-s/core-ultra-200s-series-processors-datasheet-volume-1-of-2/processor-sku-support-matrix/). 
+  - 4800 MT/s CL40 will be enough (1R, 2DPC) when using all 4 slots. 4400 MT/s when using 2R (dual rank). More info [here](https://edc.intel.com/content/www/us/en/design/products/platforms/details/arrow-lake-s/core-ultra-200s-series-processors-datasheet-volume-1-of-2/processor-sku-support-matrix/).\
+  Asus however [tested](https://edgeup.asus.com/2025/aemp-iii-gives-you-a-seamless-experience-with-the-new-kingston-64gb-ddr5-memory-modules/) Kingston ValueRAM [KVR64A52BD8-64 4x64GB CUDIMM](https://tweakers.net/pricewatch/2173764/kingston-valueram-kvr64a52bd8-64.html) (€€€!) at 5600 MT/s on Z890 boards.
   - Check memory compatibility on the [Asus support site](https://www.asus.com/us/motherboards-components/motherboards/prime/prime-z890-p-wifi/helpdesk_qvl_memory?model2Name=PRIME-Z890-P-WIFI) (tab CPU/Memory Support).
 
 ## Goals
@@ -59,8 +60,9 @@ At a later stage, measure power usage.
 ## README per subject
 
 - [Motherboard](Motherboard.md)
-- [Windows 11](Windows.md)
 - [Proxmox](Proxmox.md)
+- [Benchmarks](Benchmarks.md)
+- [Windows 11](Windows.md)
 - [TrueNAS](TrueNAS.md)
 
 ## Useful tools
