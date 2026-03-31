@@ -14,6 +14,41 @@ On the first boot, follow the wizard. When asked to select the network interface
 
 After reboot, login and run the [post-install script](https://community-scripts.org/scripts/post-pve-install) and use the default answers. Don't close the shell until the script finishes (updates might take a few minutes).
 
+## Configuration
+
+### Enabling IOMMU
+
+To prepare for device passthrough.
+
+```bash
+nano /etc/default/grub
+# Add `intel_iommu=on` to `GRUB_CMDLINE_LINUX_DEFAULT`,  and reboot.
+update-grub
+# Reboot
+dmesg | grep -e DMAR -e IOMMU
+# Should return line DMAR: IOMMU enabled
+dmesg | grep 'remapping'
+# Should return line DMAR-IR: Enabled IRQ remapping
+```
+
+## Accessing VM
+
+### SSH
+
+Linux: `apt install openssh-server`
+
+Windows (PowerShell as Administrator):
+```ps1
+Add-WindowsCapability -Online -Name OpenSSH.Server
+# Wait for ages...
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
+```
+
+### SPICE
+
+To access a VM using SPICE (VNC alternative), follow instructions at https://pve.proxmox.com/wiki/SPICE
+
 ## Issues
 
 ### No network connection after installation
