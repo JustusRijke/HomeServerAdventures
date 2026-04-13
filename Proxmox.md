@@ -10,28 +10,35 @@ Download: https://www.proxmox.com/en/products/proxmox-virtual-environment/get-st
 
 Based on [Proxmox Beginner’s Guide: Everything You Need to Get Started](https://youtu.be/lFzWDJcRsqo) and Proxmox VE 9.1.1 (9.1.6 after the post-install script).
 
-On the first boot, follow the wizard. When asked to select the network interface, select the NIC, not the WiFi adapter.
+On the first boot, connect the server to a wired network and follow the wizard. When asked to check the network settings, use a fixed (DHCP reserved) IP address. The IP address can only be changed later by editing `/etc/hosts` and `/etc/network/interfaces`.
 
-After reboot, login and run the [post-install script](https://community-scripts.org/scripts/post-pve-install) and use the default answers. Don't close the shell until the script finishes (updates might take a few minutes).
+When installation is done, Proxmox should be reachable via SSH and the web interface.
+
+After reboot, login and run the [post-install script](https://community-scripts.org/scripts/post-pve-install) and use the default answers, but disable the enterprise repos when using the community edition. Don't close the shell until the script finishes (updates might take a few minutes).
 
 ## Configuration
 
 ### Enabling IOMMU
 
-To prepare for device passthrough.
+To prepare for device passthrough:
 
 ```bash
 nano /etc/default/grub
 # Add `intel_iommu=on` to `GRUB_CMDLINE_LINUX_DEFAULT`,  and reboot.
 update-grub
-# Reboot
+reboot now
+```
+
+Test if settings were applied succesfully:
+
+```bash
 dmesg | grep -e DMAR -e IOMMU
 # Should return line DMAR: IOMMU enabled
 dmesg | grep 'remapping'
 # Should return line DMAR-IR: Enabled IRQ remapping
 ```
 
-## Accessing VM
+## Accessing VMs
 
 ### SSH
 

@@ -8,17 +8,17 @@ TODO: first check current version, maybe update not required. Latest version can
 
 ### Settings
 
-Suggested changes (non-defaults). Skip for now, first benchmark with defaults.
+Suggested settings. Skip for now, first benchmark with defaults.
 
 | Section | Setting | Value | Description |
 | - | - | - | - |
 | Advanced Mode | AURA | Off | RGB LED lighting, bloat |
-| Advanced Mode | ReSize BAR | t.b.d. | Maybe needed for Intel Arc sharing |
+| Advanced Mode | ReSize BAR | On (default) | Maybe needed for Intel Arc sharing |
 | PCI Subsystem | SR-IOV Support | Enabled | Maybe needed for Intel Arc sharing / disk controler passthru |
-| System Agent | VT-d | Enabled | Allows VMs to run |
+| System Agent | VT-d | Enabled (default) | Allows VMs to run |
 | Boot | Fast Boot | Disabled | Do not skip checks |
-| Boot | Secure Boot | Disabled | Maybe needed when isntalling Win11 on host |
-| CPU | Intel (VMX) Virtualization Technology | Enabled | Allows VMs to run |
+| Boot | Secure Boot | Standard (default) | Maybe needed when installing Win11 on host |
+| CPU | Intel (VMX) Virtualization Technology | Enabled (default) | Allows VMs to run |
 | CPU | CPU C-states | Disabled | CPU Power Management, known to cause Proxmox instability |
 | Thunderbolt | Integrated Thunderbolt(TM) | Disabled | Not used. [Free up PCIe resources](https://forum.level1techs.com/t/intel-arc-pro-b60-sr-iov-not-working-with-asrock-b760-pro-rs/246317/16). |
-| Trusted Computing | Security Device Support | Disabled | Bloat, but required for Win11 |
+| Trusted Computing | Security Device Support | Disabled | Bloat, but might be required for Win11 installation (when disabling after installation, Win11 still boots) |

@@ -2,6 +2,37 @@
 
 If possible, the integrated SATA will be put in passthrough mode. Why? This allows the NAS to get full access to the HDDs (SMART info).
 
+## Check if passthrough is possible
+
+To find your SATA controller and its ID:
+
+```bash
+lspci -nn | grep -i sata
+```
+
+This will (in my case) return:
+```bash
+80:17.0 SATA controller [0106]: Intel Corporation Device [8086:7f62] (rev 10)
+```
+
+Once you have that ID (like 80:17.0), you must ensure it isn't sharing a group with your NVMe drive. Use this "one-liner" to see everything in that controller's group:
+
+```bash
+# Replace 80:17.0 with your actual SATA ID from the step above
+ls -la /sys/bus/pci/devices/0000:80:17.0/iommu_group/devices
+```
+
+If it returns only the actual SATA device, you are good to go:
+
+```bash
+total 0
+drwxr-xr-x 2 root root 0 Apr 13 21:05 .
+drwxr-xr-x 3 root root 0 Apr 13 21:05 ..
+lrwxrwxrwx 1 root root 0 Apr 13 21:05 0000:80:17.0 -> ../../../../devices/pci0000:80/0000:80:17.0
+```
+
+You can now add the raw PCI device to a VM. Check the box for All Functions (to ensure the VM gets everything on that controller) and PCI-Express (at least when passing through to Windows, unsure if required for Linux).
+
 ## TODO
 
 - Check if passthrough is possible, depends on IOMMU isolation, many ways to crash Proxmox host.
