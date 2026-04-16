@@ -1,8 +1,10 @@
 # TrueNAS
 
-If possible, the integrated SATA will be put in passthrough mode. Why? This allows the NAS to get full access to the HDDs (SMART info).
+To allows TrueNAS to get full access to the HDDs (SMART info), the hard disk controller must be passed through. 
 
 ## Check if passthrough is possible
+
+### SATA
 
 To find your SATA controller and its ID:
 
@@ -32,6 +34,23 @@ lrwxrwxrwx 1 root root 0 Apr 13 21:05 0000:80:17.0 -> ../../../../devices/pci000
 ```
 
 You can now add the raw PCI device to a VM. Check the box for All Functions (to ensure the VM gets everything on that controller) and PCI-Express (at least when passing through to Windows, unsure if required for Linux).
+
+### SAS
+
+However, the server contains SAS drives, which are not supported by the motherboard (SATA controller). A [Supermicro AOC-S3008L-L8E](https://www.supermicro.com/en/products/accessories/addon/aoc-s3008l-l8e.php) is used to connect the HDDs.
+
+The procedure is identical:
+
+```bash
+lspci -nn | grep -i sas
+# 85:00.0 Serial Attached SCSI controller [0107]: Broadcom / LSI SAS3008 PCI-Express Fusion-MPT SAS-3 [1000:0097] (rev 02)
+ls -la /sys/bus/pci/devices/0000:85:00.0/iommu_group/devices
+# total 0
+# drwxr-xr-x 2 root root 0 Apr 16 15:33 .
+# drwxr-xr-x 3 root root 0 Apr 16 15:33 ..
+# lrwxrwxrwx 1 root root 0 Apr 16 15:33 0000:85:00.0 -> ../../../../d # # devices/pci0000:80/0000:80:1c.4/0000:85:00.0
+```
+
 
 ## TODO
 

@@ -2,11 +2,13 @@
 
 How to create a Windows 11 ISO, debloated and with recent Windows updates slipstreamed. This ISO will be used whenever I need a basic Win11 VM.
 
-## Download ISO
+## Preparing installation media
+
+### Download ISO
 
 Microsoft already adds updates to their ISO's (download [here](https://www.microsoft.com/en-us/software-download/windows11)) - so no need to slipstream.
 
-## Debloat
+### Debloat
 
 Using [Windows-ISO-Debloater](https://github.com/itsNileshHere/Windows-ISO-Debloater). Requires a Windows 10/11 PC with enough free space to unpack the ISO.
 
@@ -22,18 +24,19 @@ For my setup I selected Windows 11 Pro N (no media apps bundled), and left all o
 - User folders (removed)
 - ISO compression (enabled)
 
-## Add (slipstream) device drivers
+### Add (slipstream) device drivers
 
 Not required at this stage. Might come in handy once I want to create Win11 VM's. For now, it'll only be used for testing the host / updating firmware using Windows.
 
-## Create bootable USB stick
+
+## Installation (bare metal)
+
+### Create bootable USB stick
 
 Use [Rufus](https://rufus.ie/en/), keep all options to their defaults.
 When prompted with Windows User Experience questions, disable all checkboxes (these things are already handled by the iso debloater script).
 
-## Installation
-
-Boot PC with USB stick. When partitioning the drive, only use 64GB. We'll leave the rest for multiboot: a Debian server distro for benchmarking, and a Proxmox distro for testing.
+Boot PC with USB stick.
 
 ### Driver & Tools
 
@@ -63,6 +66,28 @@ TODO: Update list after install. Disable unused devices in Device Manager.
 Above drivers might be outdated when using the links on the Asus website.
 
 TODO: Use [Intel® Driver & Support Assistant](https://www.intel.com/content/www/us/en/support/detect.html). Check which drivers were updated and use those in future installs. Low prio, VM's might not even use 'm.
+
+## Installation (VM)
+
+1. Download [virtio-win.iso](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)
+1. Create a VM. Options:
+    - Set correct guest OS
+    - Add drive for the debloated Windows ISO
+    - Add additional drive vor VirtIO drivers and select the virtio iso
+    - Graphic card: SPICE
+    - Check Qemu Agent
+    - Uncheck Add TPM (optional)
+    - Disks: check Discard
+    - Memory: uncheck Ballooning (optional, increases performance)
+    - Memory: uncheck KSM (optional, increases performance)
+1. Start the VM and finish the installation.
+    - If TPM was disabled, the installation will be blocked, [bypass the TPM check](https://medium.com/@thatCleverNerd/how-to-bypass-tpm-requirements-for-windows-11-using-regedit-steam-deck-2c55b697a87b) to fix this.
+    - No harddrives will be found, because the SCSI driver is not installed. When prompted, install the drivers on `D:\vioscsi\w11\amd64`
+1. After install, run  `D:\virtio-win-guest-tools.exe` and install all drivers.
+1. On your client (where you want to view the VM), install [virt-viewer](https://virt-manager.org/download).
+
+You can now connect to the VM using [SPICE](https://pve.proxmox.com/wiki/SPICE).
+This is a good time to shutdown the VM and make a backup and/or snapshot.
 
 ## Useful links
 
