@@ -63,6 +63,7 @@ At a later stage, measure power usage.
 - [Benchmarks](Benchmarks.md)
 - [Windows 11](Windows.md)
 - [TrueNAS](TrueNAS.md)
+- [HBA](HBA.md)
 
 ## Useful tools
 
