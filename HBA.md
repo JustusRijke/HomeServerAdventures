@@ -128,7 +128,29 @@ Note the unexpected pwm percentage on pwm7: 128 is actually 50% (the scale is 0-
 
 ## Changing fan speeds
 
-To control fan speed, we need to check on which port the chip is connected:
+### BIOS
+
+Change the CHA_FAN2 profile in the Q-Fan Control screen.
+
+Settings:
+
+- Manual mode
+- Source: MotherBoard (ambient temperature in the case?)
+- Profile:
+  - Duty Cycle at 0°C: 25%
+  - Duty Cycle at 30°C: 33%
+  - Duty Cycle at 45°C: 100%
+
+### Terminal
+
+To control fan speed, we need to check on which port the chip is connected. First check which hardware monitor devices are available:
+
+```bash
+ls /sys/class/hwmon
+hwmon0  hwmon1  hwmon2  hwmon3  hwmon4  hwmon5  hwmon6
+```
+
+Then, find the NCT chip:
 
 ```bash
 cat /sys/class/hwmon/hwmon*/name
@@ -140,6 +162,8 @@ coretemp # 4
 mt7925_phy0 # 5
 nct6799 # number 6!
 ```
+
+**NOTE:** The order (and therefore the number) can be different after reboot.
 
 Chassis fan 2 is on pwm3. We can change the fan speed by first changing the PWM mode to MANUAL:
 
