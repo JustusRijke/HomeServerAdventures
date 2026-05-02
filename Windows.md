@@ -87,7 +87,7 @@ TODO: Use [Intel® Driver & Support Assistant](https://www.intel.com/content/www
 1. On your client (where you want to view the VM), install [virt-viewer](https://virt-manager.org/download).
 
 You can now connect to the VM using [SPICE](https://pve.proxmox.com/wiki/SPICE).
-This is a good time to shutdown the VM and make a backup and/or snapshot.
+This is a good time to shutdown the VM and make a snapshot.
 
 ## Useful links
 

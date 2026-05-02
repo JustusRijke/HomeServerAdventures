@@ -20,11 +20,13 @@ After reboot, login and run the [post-install script](https://community-scripts.
 
 ### Enabling IOMMU
 
+Source: https://pve.proxmox.com/wiki/PCI(e)_Passthrough
+
 To prepare for device passthrough:
 
 ```bash
 nano /etc/default/grub
-# Add `intel_iommu=on` to `GRUB_CMDLINE_LINUX_DEFAULT`,  and reboot.
+# Add `intel_iommu=on iommu=pt` to `GRUB_CMDLINE_LINUX_DEFAULT`,  and reboot.
 update-grub
 reboot now
 ```
