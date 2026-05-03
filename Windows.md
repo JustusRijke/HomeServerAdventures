@@ -77,6 +77,7 @@ TODO: Use [Intel® Driver & Support Assistant](https://www.intel.com/content/www
     - Graphic card: SPICE
     - Check Qemu Agent
     - Uncheck Add TPM (optional)
+    - CPU type: Host (required for Intel Arc GPU passthrough)
     - Disks: check Discard
     - Memory: uncheck Ballooning (optional, increases performance)
     - Memory: uncheck KSM (optional, increases performance)

@@ -1,47 +1,16 @@
 # GPU
 
-## PCIe Bus Errors
-
-`dmesg` showed many RxErr from the GPU (device 06):
-
-```bash
-[  340.434036] pcieport 0000:00:06.0: AER: Correctable error message received from 0000:00:06.0
-[  340.434037] pcieport 0000:00:06.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
-[  340.434038] pcieport 0000:00:06.0:   device [8086:ae4d] error status/mask=00000001/00002000
-[  340.434038] pcieport 0000:00:06.0:    [ 0] RxErr                  (First)
-``` 
-
-Changing the PCIex16 Link Speed to gen4 in the BIOS fixed that. But Gen5 should work fine. Created a support ticket at ASRock.
-
 ## Enabling SR-IOV passthrough
 
 1. Enable IOMMU (see Proxmox notes)
 1. Check if passthrough is possible (see below)
-1. Set number of virtual GPUs (TODO: make persistent, see https://github.com/ccpk1/Homelab-Public-Documentation/blob/main/Proxmox%20Virtual%20GPU%20Setup%20with%20Intel%20Arc%20Pro%20B50.md#5--make-the-count-of-virtual-gpus-persistent-through-reboots)
+1. Set number of virtual GPUs
+1. Passthrough vGPU
 
-Instructions say the lspci should show that GPU uses vpci drivers, but its using xe: `Kernel driver in use: xe` -> after passing thru to VM, it changes: `Kernel driver in use: vfio-pci`
+Links:
+- https://github.com/ccpk1/Homelab-Public-Documentation/blob/main/Proxmox%20Virtual%20GPU%20Setup%20with%20Intel%20Arc%20Pro%20B50.md
+- https://forum.level1techs.com/t/proxmox-9-0-intel-b50-sr-iov-finally-its-almost-here-early-adopters-guide/238107/61
 
-
-Windows driver installation works, but device manager shows Arc pro stopped (Code 43) -> fixed by setting CPU type to "host"
-but passmark fails (dx12 crashes) and is slow (maybe because of RDP)
-
-intel driver tool says rebar not enabled
-
-Source: https://github.com/ccpk1/Homelab-Public-Documentation/blob/main/Proxmox%20Virtual%20GPU%20Setup%20with%20Intel%20Arc%20Pro%20B50.md
-
-https://forum.level1techs.com/t/proxmox-9-0-intel-b50-sr-iov-finally-its-almost-here-early-adopters-guide/238107/61
-
-```bash
-There’s also the udev method as described further up by a few posters in this forum - don’t even need to install any additional packages - I just created a new .rules file in /etc/udev/rules.d/ with a single line like:
-
-SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0xe212", ATTR{sriov_numvfs}="2"
-
-and then run:
-
-udevadm control --reload
-
-and then on each reboot the number of VFs is created for you :slight_smile:
-```
 
 ### Check if passthrough is possible
 
@@ -92,4 +61,47 @@ root@pve:~# lspci -nnk | grep "Battlemage"
 04:00.2 VGA compatible controller [0300]: Intel Corporation Battlemage G21 [Intel Graphics] [8086:e211]
 ```
 
+Now to make this change persistent:
 
+```bash
+echo 'SUBSYSTEM=="pci", ATTR{vendor}=="0x8086", ATTR{device}=="0xe211", ATTR{sriov_numvfs}="2"' > /etc/udev/rules.d/60-vgpu.rules
+udevadm control --reload-rules
+udevadm trigger
+```
+
+### Passthrough vGPU
+
+For Windows 11, make sure the VirtIO drivers are installed.
+
+1. In the Proxmox gui, under Resource Mappings, create add a PCI Device mapping for each virtual GPU
+1. Add the the PCI Device to the virtual machine
+1. Install Intel Arc device drivers
+
+## Using the VM: Parsec
+
+You can access the VM using RDP, but that will not use the GPU (beter said: not fully, even with a lot of custom registry stuff). 
+To use the VM with GPU acceleration: 
+
+- Install [Parsec](https://parsec.app/downloads)
+- Turn off VM
+- Set display to None
+
+## Troubleshooting
+
+### PCIe Bus Errors
+
+`dmesg` showed many RxErr from the GPU (device 06):
+
+```bash
+[  340.434036] pcieport 0000:00:06.0: AER: Correctable error message received from 0000:00:06.0
+[  340.434037] pcieport 0000:00:06.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+[  340.434038] pcieport 0000:00:06.0:   device [8086:ae4d] error status/mask=00000001/00002000
+[  340.434038] pcieport 0000:00:06.0:    [ 0] RxErr                  (First)
+``` 
+
+Changing the PCIex16 Link Speed to gen4 in the BIOS fixed that. But Gen5 should work fine. Created a support ticket at ASRock.
+
+### Code 43
+
+Windows driver installation works, but device manager shows Arc pro stopped (Code 43).
+Fixed by setting CPU type to "host".

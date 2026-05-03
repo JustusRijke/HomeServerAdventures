@@ -34,5 +34,6 @@ Results (events per second):
 | - | - | - | - | - | -
 | Bare metal with iGPU | 70074 | 876 | 4111 | 4092 | 56351
 | Bare metal with Intel Arc Pro B60 | 69554 | 936 | 16762 | 4092 | 56241
-| VM (1 socket / 4 cores / 16 GiB RAM, IDE controller) | 12727 | - | - | 3470 | 37273 (IDE)
-| VM (8 GiB RAM, no KSM/ballooning, SCSI controller)) | 12765 | - | - | 3082 (because of 8 GiB?) | 52656 (SCSI)
+| VM (1 socket / 4 cores / 16 GiB RAM, IDE controller) | 12727 | - | - | 3470 | 37273
+| VM (8 GiB RAM, no KSM/ballooning, SCSI controller)) | 12765 | - | - | 3082 (because of 8 GiB?) | 52656
+| VM (1 socket / 4 cores / 16 GiB RAM, vGPU via Parsec) | - | 1030 | Fails ("Invalid video mode") | - | -
