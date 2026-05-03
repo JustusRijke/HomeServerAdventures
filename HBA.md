@@ -272,78 +272,43 @@ ROC = "RAID on Chip".
 
 Solution based on: https://forums.unraid.net/topic/155951-parse-temperature-of-hba-9300-16i-lsi-sas3008-controller/
 
-## SASIRCU
+## Scripting
 
-Not useful as yet, but keeping this info for when the tool is needed.
+See [hba-fan-control.sh](hba-fan-control.sh) for a script that automatically updates fan PWM based on HBA temperature.
 
-Use [SAS3IRCU](https://docs.broadcom.com/doc/12353382) to get info on the SAS controller and its disk.
+To make this run in the background and start automatically on boot, create a service file.
 
-1. Download `https://docs.broadcom.com/docs/SAS3IRCU_P16.zip`
-1. Upload it to Proxmox, for instance by using [WinSCP](https://winscp.net/eng/index.php)
-1. Extract  `sas3ircu` and make it executable:
+**Create `/etc/systemd/system/hba-fan.service`:**
 
-    ```bash
-    # apt install unzip
-    unzip -q SAS3IRCU_P16.zip -d /tmp/sas3ircu
-    cp /tmp/sas3ircu/SAS3IRCU_P16/sas3ircu_rel/sas3ircu/sas3ircu_linux_x64_rel/sas3ircu .
-    chmod +x sas3ircu
-    ```
+```ini
+[Unit]
+Description=HBA Temperature Fan Control
+After=network.target
 
-Check if the adapter is reachable:
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/hba-fan-control.sh
+Restart=always
+RestartSec=5
+User=root
 
-```bash
-./sas3ircu list
-Avago Technologies SAS3 IR Configuration Utility.
-Version 17.00.00.00 (2018.04.02)
-Copyright (c) 2009-2018 Avago Technologies. All rights reserved.
-
-
-        Adapter      Vendor  Device                       SubSys  SubSys
-Index    Type          ID      ID    Pci Address          Ven ID  Dev ID
------  ------------  ------  ------  -----------------    ------  ------
-0     SAS3008       1000h   97h    00h:85h:00h:00h      15d9h   0808h
-SAS3IRCU: Utility Completed Successfully.
+[Install]
+WantedBy=multi-user.target
 ```
 
-To get some basic info:
+**Enable and start it:**
+```bash
+systemctl daemon-reload
+systemctl enable hba-fan.service
+systemctl start hba-fan.service
+```
+
+**Check status:**
 
 ```bash
-./sas3ircu 0 display
-Avago Technologies SAS3 IR Configuration Utility.
-Version 17.00.00.00 (2018.04.02)
-Copyright (c) 2009-2018 Avago Technologies. All rights reserved.
-
-Read configuration has been initiated for controller 0
-------------------------------------------------------------------------
-Controller information
-------------------------------------------------------------------------
-  Controller type                         : SAS3008
-  BIOS version                            : 8.37.00.00
-  Firmware version                        : 16.00.12.00
-  Channel description                     : 1 Serial Attached SCSI
-  Initiator ID                            : 0
-  Maximum physical devices                : 1023
-  Concurrent commands supported           : 9856
-  Slot                                    : 5
-  Segment                                 : 0
-  Bus                                     : 133
-  Device                                  : 0
-  Function                                : 0
-  RAID Support                            : No
-------------------------------------------------------------------------
-IR Volume information
-------------------------------------------------------------------------
-------------------------------------------------------------------------
-Physical device information
-------------------------------------------------------------------------
-------------------------------------------------------------------------
-Enclosure information
-------------------------------------------------------------------------
-  Enclosure#                              : 1
-  Logical ID                              : 50030480:1a516902
-  Numslots                                : 8
-  StartSlot                               : 0
-------------------------------------------------------------------------
-SAS3IRCU: Command DISPLAY Completed Successfully.
-SAS3IRCU: Utility Completed Successfully.
+journalctl -u hba-fan.service -f
+May 03 15:24:02 pve systemd[1]: Started hba-fan.service - HBA Temperature Fan Control.
+May 03 15:24:02 pve hba-fan-control.sh[8069]: Controller started. Driver: nct6775. Path: /sys/class/hwmon/hwmon7/pwm3
+May 03 15:24:02 pve hba-fan-control.sh[8069]: HBA Temp: 46°C -> PWM Speed: 69
+May 03 15:24:17 pve hba-fan-control.sh[8069]: HBA Temp: 44°C -> PWM Speed: 64
 ```
