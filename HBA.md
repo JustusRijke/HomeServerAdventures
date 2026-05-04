@@ -274,7 +274,7 @@ Solution based on: https://forums.unraid.net/topic/155951-parse-temperature-of-h
 
 ## Scripting
 
-See [hba-fan-control.sh](hba-fan-control.sh) for a script that automatically updates fan PWM based on HBA temperature.
+See [hba-fan-control.sh](hba-fan-control-local.sh) for a script that automatically updates fan PWM based on HBA temperature. Use this [hba-fan-control.sh](hba-fan-control-serial-socket.sh) when updating based on TrueNAS serial output.
 
 To make this run in the background and start automatically on boot, create a service file.
 
