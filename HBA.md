@@ -312,3 +312,30 @@ May 03 15:24:02 pve hba-fan-control.sh[8069]: Controller started. Driver: nct677
 May 03 15:24:02 pve hba-fan-control.sh[8069]: HBA Temp: 46°C -> PWM Speed: 69
 May 03 15:24:17 pve hba-fan-control.sh[8069]: HBA Temp: 44°C -> PWM Speed: 64
 ```
+
+## Passthrough
+
+Find the controller, and check if it has its own IOMMU group:
+
+```bash
+lspci -nn | grep -i sas
+# 85:00.0 Serial Attached SCSI controller [0107]: Broadcom / LSI SAS3008 PCI-Express Fusion-MPT SAS-3 [1000:0097] (rev 02)
+ls -la /sys/bus/pci/devices/0000:85:00.0/iommu_group/devices
+# total 0
+# drwxr-xr-x 2 root root 0 Apr 16 15:33 .
+# drwxr-xr-x 3 root root 0 Apr 16 15:33 ..
+# lrwxrwxrwx 1 root root 0 Apr 16 15:33 0000:85:00.0 -> ../../../../d # # devices/pci0000:80/0000:80:1c.4/0000:85:00.0
+```
+
+In the Proxmox gui, under Datacenter -> Resource Mappings, add a PCI Device mapping for the HBA.
+This can be used to passthrough the HBA to a VM.
+
+## Ending the passthrough
+
+If you want to access the HBA again after shutting down the VM that has the HBA attached:
+
+```
+echo "1" > /sys/bus/pci/devices/0000\:85\:00.0/remove
+sleep 1
+echo "1" > /sys/bus/pci/rescan
+```

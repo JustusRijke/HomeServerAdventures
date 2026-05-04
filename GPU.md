@@ -73,7 +73,7 @@ udevadm trigger
 
 For Windows 11, make sure the VirtIO drivers are installed.
 
-1. In the Proxmox gui, under Resource Mappings, create add a PCI Device mapping for each virtual GPU
+1. In the Proxmox gui, under Datacenter -> Resource Mappings, add a PCI Device mapping for each virtual GPU
 1. Add the the PCI Device to the virtual machine
 1. Install Intel Arc device drivers
 
