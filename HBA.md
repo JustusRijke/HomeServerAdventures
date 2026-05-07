@@ -315,6 +315,8 @@ May 03 15:24:17 pve hba-fan-control.sh[8069]: HBA Temp: 44°C -> PWM Speed: 64
 
 ## Passthrough
 
+### Supermicro HBA
+
 Find the controller, and check if it has its own IOMMU group:
 
 ```bash
@@ -330,6 +332,20 @@ ls -la /sys/bus/pci/devices/0000:85:00.0/iommu_group/devices
 In the Proxmox gui, under Datacenter -> Resource Mappings, add a PCI Device mapping for the HBA.
 This can be used to passthrough the HBA to a VM.
 
+### On-board SATA
+
+Steps are identical to the Supermicro device:
+
+```bash
+lspci -nn | grep -i sata
+# 80:17.0 SATA controller [0106]: Intel Corporation Device [8086:7f62] (rev 10)
+ls -la /sys/bus/pci/devices/0000:80:17.0/iommu_group/devices
+# total 0
+# drwxr-xr-x 2 root root 0 Apr 13 21:05 .
+# drwxr-xr-x 3 root root 0 Apr 13 21:05 ..
+# lrwxrwxrwx 1 root root 0 Apr 13 21:05 0000:80:17.0 -> ../../../../devices/pci0000:80/0000:80:17.0
+```
+
 ## Ending the passthrough
 
 If you want to access the HBA again after shutting down the VM that has the HBA attached:
@@ -338,4 +354,34 @@ If you want to access the HBA again after shutting down the VM that has the HBA 
 echo "1" > /sys/bus/pci/devices/0000\:85\:00.0/remove
 sleep 1
 echo "1" > /sys/bus/pci/rescan
+```
+
+## Unlocking the drives
+
+Check if drive is locked:
+
+```bash
+sedutil-cli --query /dev/sdb
+/dev/sdb SAS ST8000NM0095     KT02 SEAGATE
+TPer function (0x0001)
+    ACKNAK = N, ASYNC = N. BufferManagement = N, comIDManagement  = N, Streaming = Y, SYNC = Y
+Locking function (0x0002)
+    Locked = N, LockingEnabled = Y, LockingSupported = Y, MBRDone = N, MBREnabled = N, MediaEncrypt = Y
+Geometry function (0x0003)
+# etc...
+```
+
+If locked = Y, you'll need to unlock it by using the PSID (32 char string on the drive, scan the small QR code):
+
+```bash
+sedutil-cli --yesIreallywanttoERASEALLmydatausingthePSID <PSID> /dev/sdX
+```
+
+**Tip:** Find the serial drive:
+
+```bash
+ sg_inq -p 0x80 /dev/sdc
+VPD INQUIRY, page code=0x80:
+00 80 00 14 5a 41 31 33  59 57 4a 44 30 30 30 30    ....ZA13YWJD0000 # <-- SERIAL N/O
+52 37 30 33 55 47 4c 47                             R703UGLG
 ```

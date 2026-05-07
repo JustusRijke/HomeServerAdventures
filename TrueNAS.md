@@ -83,16 +83,15 @@ echo "Hello from TrueNAS" > /dev/cuau0
 
 ### Send temperature data to serial port
 
-1. Create [/usr/bin/local/hba_monitor.sh](hba_monitor.sh)
-1. Create [/usr/local/etc/rc.d/hba_monitor](hba_monitor.rc.d)
-1. Make the files executable and enable the service:
-    ```bash
-    chmod +x /usr/bin/local/hba_monitor.sh
-    chmod +x /usr/local/etc/rc.d/hba_monitor
-    # Start automatically after boot
-    sysrc hba_monitor_enable="YES"
-    service hba_monitor start
-    ```
-1. To avoid log file cancer, add `/var/log/hba_monitor.log                640  1     100  *     JC` to `/etc/newsyslog.conf`. Validate by running `newsyslog -nv`.
+ [hba_monitor.sh](hba_monitor.sh) contains a script that will send the HBA temperature to the serial port every 5 seconds. On the Proxmox end, this is used to set the fan temperature.
 
-To control Proxmox host fan speed, enable the `hba-fan-control` service (see [HBA.md](HBA.md)).
+To make sure TrueNAS starts the script on boot, we cannot use the standard FreeBSD service framework (not persistent after reboot).
+
+Therefore, we need to add a datastore, and copy the script there. I've added a datastore at `/mnt/data/TrueNAS-local`.
+
+1. `chmod +x /mnt/data/TrueNAS-local/hba_monitor.sh`
+1. GUI → System → Init/Shutdown Scripts → Add → Type: Script, Script: `/mnt/data/TrueNAS-local/hba_monitor.sh`, When: Post Init, Enabled: ✓ → Save
+1. The script will start after reboot. To start it now, open a terminal and run `nohup sh /mnt/data/TrueNAS-local/hba_monitor.sh &`
+1. Verify: `pgrep -lf hba_monitor`
+
+To control the host fan speed, enable the `hba-fan-control` service (see [HBA.md](HBA.md)).
